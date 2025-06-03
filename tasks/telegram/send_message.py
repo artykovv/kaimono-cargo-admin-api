@@ -1,8 +1,5 @@
 # tasks.py
 import httpx
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from models import NotificationTask, Client
 from config.config import TELEGRAM_API_KEY, TELEGRAM_API_URL
 
 

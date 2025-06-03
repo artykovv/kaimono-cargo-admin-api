@@ -50,6 +50,7 @@ async def update_product_statuses_async():
             for product in products_in_china:
                 product.status_id = status_transit.id
                 product.date = datetime.now(pytz.timezone('Asia/Bishkek')).date()
+                product.date_transit = datetime.now(pytz.timezone('Asia/Bishkek')).date()
                 db.add(product)
                 updated_count += 1
                 updated_ids.append(product.id)

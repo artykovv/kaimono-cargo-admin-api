@@ -20,4 +20,5 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     
     branches = relationship("Branch", secondary=user_branches, back_populates="users")
     payments = relationship("Payment", back_populates="taken_by")
+    product_actions = relationship("ProductHistory", back_populates="action_by")
 

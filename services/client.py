@@ -1,4 +1,5 @@
 # services/client_service.py
+from datetime import datetime, timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import desc, func as sql_func
@@ -16,6 +17,7 @@ class ClientService:
             city=client_data.city,
             telegram_chat_id=client_data.telegram_chat_id,
             branch_id=client_data.branch_id,
+            registered_at=datetime.now(timezone(timedelta(hours=6))).replace(tzinfo=None)
         )
         
         # Генерация numeric_code

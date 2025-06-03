@@ -27,7 +27,7 @@ async def create_product(
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(fastapi_users.current_user())
 ):
-    db_product = await ProductService.create_product(db, product)
+    db_product = await ProductService.create_product(db, product, current_user)
     return db_product
 
 # Read (one)
@@ -75,7 +75,7 @@ async def update_product(
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(fastapi_users.current_user())
 ):
-    db_product = await ProductService.update_product(db, product_id, product)
+    db_product = await ProductService.update_product(db, product_id, product, current_user)
     if db_product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return db_product
@@ -106,7 +106,7 @@ async def update_products(
         raise HTTPException(status_code=400, detail="Не указан статус для обновления")
 
     try:
-        updated_products = await ProductService.update_products_status(db, request.product_ids, request.status_id)
+        updated_products = await ProductService.update_products_status(db, request.product_ids, request.status_id, current_user)
         return {"message": f"Успешно обновлено {len(updated_products)} товаров"}
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -166,9 +166,10 @@ async def process_china(
     file_data = await file_content.read()  # Читаем содержимое файла в байтах
     
     # Запускаем обработку файла асинхронно
-    task = asyncio.create_task(process_china_products(file_data, db))
+    # task = asyncio.create_task(process_china_products(file_data, db, user_id))
+    task = await process_china_products(file_data, db, current_user)
 
-    return {"message": "Обработка файла запущена"}
+    return task
 
 @router.post("/process-bishkek")
 async def process_bishkek(
@@ -180,6 +181,7 @@ async def process_bishkek(
     file_data = await file_content.read()  # Читаем содержимое файла в байтах
     
     # Запускаем обработку файла асинхронно
-    task = asyncio.create_task(process_bishkek_products(file_data, db))
+    # task = asyncio.create_task(process_bishkek_products(file_data, db, current_user))
+    task = await process_bishkek_products(file_data, db, current_user)
 
-    return {"message": "Обработка файла запущена"}
+    return task
