@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+alembic
+asyncpg
+greenlet
+fastapi-cache2[redis]
+fastapi-users[sqlalchemy]
+httpx
+apscheduler
+pytz
+python-dotenv
+openpyxl
+celery
