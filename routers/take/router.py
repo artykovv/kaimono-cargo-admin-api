@@ -19,7 +19,7 @@ router = APIRouter(prefix="/take", tags=["take"])
 # Read (one)
 @router.get("/{code}")
 async def client_code(
-    code: str,
+    code: int,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(fastapi_users.current_user())
 ):
