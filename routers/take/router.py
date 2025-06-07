@@ -25,7 +25,7 @@ async def client_code(
 ):
     query = (
         select(Client)
-        .where(Client.code == code)
+        .where(Client.numeric_code == code)
         .options(selectinload(Client.products).joinedload(Product.status))
     )
     result = await db.execute(query)
