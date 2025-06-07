@@ -8,6 +8,7 @@ from .payment import Payment, PaymentMethod, payment_products
 from .status import Status
 from .china import ChinaAddress
 from .product_history import ProductHistory
+from .textes import Text
 
 
 
