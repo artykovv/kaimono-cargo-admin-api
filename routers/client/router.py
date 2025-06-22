@@ -16,7 +16,7 @@ router = APIRouter(prefix="/clients", tags=["clients"])
 async def create_client(
     client: ClientCreate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_client = await ClientService.create_client(db, client)
     return db_client
@@ -26,7 +26,7 @@ async def create_client(
 async def read_client(
     client_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_client = await ClientService.get_client(db, client_id)
     if db_client is None:
@@ -41,7 +41,7 @@ async def read_clients(
     page: int = Query(1, ge=1, description="Номер страницы"),
     page_size: int = Query(30, ge=1, le=100, description="Количество записей на странице"),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     # Определяем филиалы пользователя
     user_branches = [] if current_user.is_superuser else [b.id for b in current_user.branches]
@@ -63,7 +63,7 @@ async def update_client(
     client_id: int,
     client: ClientUpdate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_client = await ClientService.update_client(db, client_id, client)
     if db_client is None:
@@ -75,7 +75,7 @@ async def update_client(
 async def delete_client(
     client_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_client = await ClientService.delete_client(db, client_id)
     if db_client is None:
@@ -86,7 +86,7 @@ async def delete_client(
 async def read_client(
     client_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     # Запрос с загрузкой связанных товаров
     query = (

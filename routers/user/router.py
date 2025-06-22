@@ -28,18 +28,24 @@ router.include_router(
 )
 
 @router.get("/auth/validate-token", tags=["auth"])
-async def validate_token(current_user: User = Depends(fastapi_users.current_user())):
+async def validate_token(current_user: User = Depends(fastapi_users.current_user(verified=True))):
     return {
         "message": "Token is valid", 
         # "user_id": current_user
     }
 
+@router.get("/user/me", tags=["user"], response_model=UserRead)
+async def read_user(
+    db: AsyncSession = Depends(get_async_session),
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
+):
+    return current_user
 
 @router.get("/user/{user_id}", tags=["user"], response_model=UserRead)
 async def read_user(
     user_id: UUID,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_user = await UserService.get_user(db, user_id)
     if db_user is None:
@@ -54,7 +60,7 @@ async def read_users(
     skip: int = 0,
     limit: int = 100,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     users = await UserService.get_all_users(db, skip=skip, limit=limit)
     return users
@@ -64,7 +70,7 @@ async def update_user(
     user_id: UUID,
     user: UserUpdate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_user = await UserService.get_user(db, user_id)
     if db_user is None:
@@ -79,7 +85,7 @@ async def update_user(
 async def delete_user(
     user_id: UUID,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_user = await UserService.delete_user(db, user_id)
     if db_user is None:

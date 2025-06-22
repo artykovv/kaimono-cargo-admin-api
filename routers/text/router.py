@@ -14,7 +14,7 @@ router = APIRouter(prefix="/textes", tags=["textes"])
 @router.get("/", response_model=List[TextResponse])
 async def textes_all(
     session: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     textes = await TextServices.all(session=session)
     return textes
@@ -23,7 +23,7 @@ async def textes_all(
 async def text_by_id(
     text_id: int,
     session: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     text = await TextServices.get(text_id=text_id, session=session)
     return text
@@ -32,7 +32,7 @@ async def text_by_id(
 async def text_by_key(
     key: int,
     session: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     text = await TextServices.key(key=key, session=session)
     return text
@@ -42,7 +42,7 @@ async def text_by_key(
 async def creaate_text(
     text_date: TextCreate,
     session: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     text = await TextServices.create(data=text_date, session=session)
     return text
@@ -52,7 +52,7 @@ async def update_text(
     text_id: int,
     text_data: TextUpdate,
     session: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     text = await TextServices.update(text_id=text_id, data=text_data, session=session)
     return text
@@ -61,7 +61,7 @@ async def update_text(
 # async def delete_text(
 #     text_id: int,
 #     session: AsyncSession = Depends(get_async_session),
-#     current_user: User = Depends(fastapi_users.current_user())
+#     current_user: User = Depends(fastapi_users.current_user(verified=True))
 # ):
 #     delete = await TextServices.delete(text_id)
 #     return delete

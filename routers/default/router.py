@@ -14,7 +14,7 @@ router = APIRouter()
 @router.get("/summary")
 async def get_statistics(
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     """
     Возвращает статистику:
@@ -83,7 +83,7 @@ async def get_report(
     start_date: str = Query(default=date.today().isoformat(), description="Начальная дата (гггг-мм-дд)"),
     end_date: str = Query(default=date.today().isoformat(), description="Конечная дата (гггг-мм-дд)"),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     # Преобразуем строки в даты
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()

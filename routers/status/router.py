@@ -14,7 +14,7 @@ router = APIRouter(prefix="/statuses", tags=["statuses"])
 async def create_status(
     status: StatusCreate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_status = await StatusService.create_status(db, status)
     return db_status
@@ -24,7 +24,7 @@ async def create_status(
 async def read_status(
     status_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_status = await StatusService.get_status(db, status_id)
     if db_status is None:
@@ -37,7 +37,7 @@ async def read_statuses(
     skip: int = 0,
     limit: int = 100,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     statuses = await StatusService.get_all_statuses(db, skip=skip, limit=limit)
     return statuses
@@ -48,7 +48,7 @@ async def update_status(
     status_id: int,
     status: StatusUpdate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_status = await StatusService.update_status(db, status_id, status)
     if db_status is None:
@@ -60,7 +60,7 @@ async def update_status(
 async def delete_status(
     status_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_status = await StatusService.delete_status(db, status_id)
     if db_status is None:

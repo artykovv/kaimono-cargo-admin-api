@@ -12,7 +12,7 @@ router = APIRouter(prefix="/settings", tags=["setting"])
 async def create_setting(
     setting: ConfigurationBase, 
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     setting = await SettingService.create_setting(db, setting)
     return setting
@@ -23,7 +23,7 @@ async def create_setting(
 async def read_branch(
     setting_id: int, 
     db: AsyncSession = Depends(get_async_session), 
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     setting = await SettingService.get_setting(db, setting_id)
     if setting is None:
@@ -35,7 +35,7 @@ async def get_all_settings(
     skip: int = 0, 
     limit: int = 100,
     db: AsyncSession = Depends(get_async_session), 
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     settings = await SettingService.get_all_settings(db, skip, limit)
     return settings
@@ -45,7 +45,7 @@ async def read_branch(
     setting_id: int, 
     setting: ConfigurationUpdate,
     db: AsyncSession = Depends(get_async_session), 
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     setting_update = await SettingService.update_setting(db, setting_id, setting)
     if setting_update is None:

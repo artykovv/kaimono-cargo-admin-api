@@ -15,7 +15,7 @@ router = APIRouter(prefix="/payment-methods", tags=["payment-methods"])
 async def create_payment_method(
     method: PaymentMethodCreate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_method = await PaymentMethodService.create_payment_method(db, method)
     return db_method
@@ -24,7 +24,7 @@ async def create_payment_method(
 async def read_payment_method(
     method_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_method = await PaymentMethodService.get_payment_method(db, method_id)
     if db_method is None:
@@ -36,7 +36,7 @@ async def read_payment_methods(
     skip: int = 0,
     limit: int = 100,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     methods = await PaymentMethodService.get_all_payment_methods(db, skip=skip, limit=limit)
     return methods
@@ -46,7 +46,7 @@ async def update_payment_method(
     method_id: int,
     method: PaymentMethodUpdate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_method = await PaymentMethodService.update_payment_method(db, method_id, method)
     if db_method is None:
@@ -57,7 +57,7 @@ async def update_payment_method(
 async def delete_payment_method(
     method_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_method = await PaymentMethodService.delete_payment_method(db, method_id)
     if db_method is None:

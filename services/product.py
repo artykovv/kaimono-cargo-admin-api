@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from config.statuses import BaseStatus
 from models import Product, Client, Status, ProductHistory
-from sqlalchemy import func
+from sqlalchemy import delete, func
 from schemas.product import ProductCreate, ProductUpdate
 from typing import Optional, List
 from datetime import date, datetime, timedelta, timezone
@@ -262,6 +262,10 @@ class ProductService:
         db_product = await ProductService.get_product(db, product_id)
         if not db_product:
             return None
+        
+        await db.execute(
+            delete(ProductHistory).where(ProductHistory.product_id == product_id)
+        )
         
         await db.delete(db_product)
         await db.commit()

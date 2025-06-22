@@ -25,7 +25,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 async def create_product(
     product: ProductCreate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_product = await ProductService.create_product(db, product, current_user)
     return db_product
@@ -35,7 +35,7 @@ async def create_product(
 async def read_product(
     product_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_product = await ProductService.get_product(db, product_id)
     if db_product is None:
@@ -52,7 +52,7 @@ async def read_products(
     page: int = Query(1, ge=1, description="Номер страницы"),
     page_size: int = Query(30, ge=1, le=100, description="Количество записей на странице"),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     user_branches = [] if current_user.is_superuser else [b.id for b in current_user.branches]
     result = await ProductService.get_products(
@@ -73,7 +73,7 @@ async def update_product(
     product_id: int,
     product: ProductUpdate,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_product = await ProductService.update_product(db, product_id, product, current_user)
     if db_product is None:
@@ -85,7 +85,7 @@ async def update_product(
 async def delete_product(
     product_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     db_product = await ProductService.delete_product(db, product_id)
     if db_product is None:
@@ -98,7 +98,7 @@ async def delete_product(
 async def update_products(
     request: BulkRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     if not request.product_ids:
         raise HTTPException(status_code=400, detail="Не указаны ID товаров")
@@ -116,7 +116,7 @@ async def update_products(
 async def delete_products(
     product_ids: List[int] = Form(...),  # Принимаем product_ids как список из FormData
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     if not product_ids:
         raise HTTPException(status_code=400, detail="Не указаны ID товаров")
@@ -132,7 +132,7 @@ async def delete_products(
 async def get_products_from_ids(
     request: BulkRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     if not request.product_ids:
         raise HTTPException(status_code=400, detail="Не указаны ID товаров")
@@ -160,7 +160,7 @@ async def get_products_from_ids(
 async def process_china(
     file_content: UploadFile = File(...),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     user_id = str(current_user.id)  # Получаем ID текущего пользователя
     file_data = await file_content.read()  # Читаем содержимое файла в байтах
@@ -175,7 +175,7 @@ async def process_china(
 async def process_bishkek(
     file_content: UploadFile = File(...),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     user_id = str(current_user.id)  # Получаем ID текущего пользователя
     file_data = await file_content.read()  # Читаем содержимое файла в байтах

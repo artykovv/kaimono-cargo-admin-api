@@ -24,7 +24,7 @@ router = APIRouter(prefix="/telegram", tags=["telegram"])
 async def search_clients(
     search: str = Query(""),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     if not search.strip():
         return []
@@ -53,7 +53,7 @@ async def send_notification_without_photo(
     telegram_message: TelegramMessage,
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_async_session),
-    user: User = Depends(fastapi_users.current_user())
+    user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     background_tasks.add_task(send_notification_telegram, telegram_message.message_text, telegram_message.telegram_chat_ids)
     return {"message": "Сообщение отправлено"}

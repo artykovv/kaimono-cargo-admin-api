@@ -21,7 +21,7 @@ router = APIRouter(prefix="/take", tags=["take"])
 async def client_code(
     code: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     query = (
         select(Client)
@@ -44,7 +44,7 @@ async def take_issue(
     payment_method: int = Form(...),
     client_code: str = Form(...),
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(fastapi_users.current_user())
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
 ):
     try:
         if not selected_products:
