@@ -1,5 +1,5 @@
 # schemas/client.py
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from .product import ProductResponse
@@ -22,8 +22,7 @@ class ClientResponse(ClientBase):
     registered_at: datetime
     branch_id: Optional[int] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaginatedClientsResponse(BaseModel):
     clients: List[ClientResponse]
@@ -41,5 +40,4 @@ class ClientDataResponse(ClientBase):
     branch_id: Optional[int] = None
     products: Optional[List[ProductResponse]] = None  # Добавляем список товаров
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

@@ -15,6 +15,8 @@ from .china_address.router import router as china_address
 from .default.router import router as default
 from .telegram.router import router as telegram
 from .text.router import router as text
+from .address_files.rotuer import router as address_files
+from .storage.router import router as storage
 
 routers = APIRouter()
 
@@ -32,3 +34,5 @@ routers.include_router(setting)
 routers.include_router(china_address)
 routers.include_router(telegram)
 routers.include_router(text)
+routers.include_router(address_files)
+routers.include_router(storage)

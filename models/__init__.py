@@ -9,7 +9,7 @@ from .status import Status
 from .china import ChinaAddress
 from .product_history import ProductHistory
 from .textes import Text
-
+from .address_file import AddressPhoto, AddressVideo
 
 
 from config.config import Base

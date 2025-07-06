@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from decimal import Decimal
 from datetime import date
 
@@ -12,8 +12,7 @@ class ClientBase(BaseModel):
     telegram_chat_id: Optional[str] = None
     branch_id: Optional[int] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ProductBase(BaseModel):
     product_code: Optional[str] = None

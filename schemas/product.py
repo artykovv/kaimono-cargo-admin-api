@@ -1,5 +1,5 @@
 # schemas/product.py
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import date, datetime
 from decimal import Decimal
@@ -26,8 +26,7 @@ class ProductResponse(BaseModel):
     client: Optional[ClientBase] = None
     status: Optional[StatusBase] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaginatedProductsResponse(BaseModel):
     products: List[ProductResponse]

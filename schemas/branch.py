@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class BranchBase(BaseModel):
     name: str
@@ -16,5 +16,4 @@ class BranchUpdate(BranchBase):
 class BranchResponse(BranchBase):
     id: int
     
-    class Config:
-        from_attributes = True  # Заменяет orm_mode в новых версиях Pydantic
+    model_config = ConfigDict(from_attributes=True)

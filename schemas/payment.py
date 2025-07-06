@@ -1,5 +1,5 @@
 # schemas/payment_method.py
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
@@ -22,8 +22,7 @@ class PaymentMethodResponse(PaymentMethodBase):
     id: int
     created_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaymentBase(BaseModel):
     client_id: Optional[int] = None
@@ -43,5 +42,4 @@ class PaymentResponse(PaymentBase):
     paid_at: datetime
     taken_by_id: Optional[UUID] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
