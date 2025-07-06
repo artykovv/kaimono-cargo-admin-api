@@ -12,3 +12,6 @@ pytz
 python-dotenv
 openpyxl
 celery
+pyvips[binary]
+aiobotocore
+aiofiles
