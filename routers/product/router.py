@@ -15,6 +15,8 @@ from sqlalchemy.orm import selectinload
 
 from tasks.product.create_china import process_china_products
 from tasks.product.create_bishkek import process_bishkek_products
+from tasks.product.transit_new import process_transit_products
+
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -183,5 +185,20 @@ async def process_bishkek(
     # Запускаем обработку файла асинхронно
     # task = asyncio.create_task(process_bishkek_products(file_data, db, current_user))
     task = await process_bishkek_products(file_data, db, current_user)
+
+    return task
+
+@router.post("/process-transit")
+async def process_transit(
+    file_content: UploadFile = File(...),
+    db: AsyncSession = Depends(get_async_session),
+    current_user: User = Depends(fastapi_users.current_user(verified=True))
+):
+    user_id = str(current_user.id)  # Получаем ID текущего пользователя
+    file_data = await file_content.read()  # Читаем содержимое файла в байтах
+    
+    # Запускаем обработку файла асинхронно
+    # task = asyncio.create_task(process_china_products(file_data, db, user_id))
+    task = await process_transit_products(file_data, db, current_user)
 
     return task
