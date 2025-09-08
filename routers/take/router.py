@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List
 from fastapi import APIRouter, Depends, Form, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, select
+from sqlalchemy import func, insert, select
 from auth.fastapi_users_instance import fastapi_users
 from config.database import get_async_session
 from sqlalchemy.orm import selectinload
@@ -130,3 +130,34 @@ async def take_issue(
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Ошибка при выдаче товаров: {str(e)}")
+
+@router.post("/report")
+async def get_clients_products_stats(
+    session: AsyncSession = Depends(get_async_session),
+    # current_user: User = Depends(fastapi_users.current_user(verified=True))
+    ):
+    stmt = (
+        select(
+            Client.id.label("client_id"),
+            Client.numeric_code.label("numeric_code"),
+            func.count(Product.id).label("product_count"),
+            func.coalesce(func.sum(Product.price), 0).label("total_product_price")
+        )
+        .join(Product, Product.client_id == Client.id)
+        .where(Product.status_id == 2)
+        .group_by(Client.id, Client.code)
+        .order_by(Client.id)
+    )
+
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    return [
+        {
+            "client_id": row.client_id,
+            "code": row.numeric_code,
+            "product_count": row.product_count,
+            "total_product_price": row.total_product_price
+        }
+        for row in rows
+    ]
